@@ -4,15 +4,114 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    android:paddingHorizontal="32dp"
     tools:context=".MainActivity">
 
-    <TextView
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2" />
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/horizontal80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/layout_channel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="频道号"
+        android:textColorHint="#FFD34D"
+        app:boxBackgroundColor="#33A0C5FF"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#FFD34D"
+        app:hintTextColor="#FFD34D"
+        app:layout_constraintTop_toBottomOf="@id/horizontal20">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_channel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="123"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/bg_edit_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/container_flv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="flv地址"
+        android:textColorHint="#FFD34D"
+        app:boxBackgroundColor="#33A0C5FF"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#FFD34D"
+        app:hintTextColor="#FFD34D"
+        app:layout_constraintTop_toBottomOf="@id/layout_channel">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_flv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/flv_url"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/bg_edit_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/container_hls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="hls地址"
+        android:textColorHint="#FFD34D"
+        app:boxBackgroundColor="#33A0C5FF"
+        app:boxBackgroundMode="outline"
+        app:boxCornerRadiusBottomEnd="12dp"
+        app:boxCornerRadiusBottomStart="12dp"
+        app:boxCornerRadiusTopEnd="12dp"
+        app:boxCornerRadiusTopStart="12dp"
+        app:boxStrokeColor="#FFD34D"
+        app:hintTextColor="#FFD34D"
+        app:layout_constraintTop_toBottomOf="@id/container_flv">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_hls"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hls_url"
+            android:textColor="@color/white"
+            android:textCursorDrawable="@drawable/bg_edit_cursor" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/bt_submit"
+        android:layout_width="240dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/bg_btn_primary_r24"
+        android:gravity="center"
+        android:letterSpacing="0.2"
+        android:text="进入房间"
+        android:textColor="#282828"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/horizontal80"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
