@@ -9,14 +9,12 @@ import android.view.TextureView
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.view.isVisible
 import androidx.transition.TransitionManager
 import io.agora.livestreaming.base.BaseUiActivity
 import io.agora.livestreaming.base.CommonFragmentAlertDialog
 import io.agora.livestreaming.databinding.ActivityLivingBinding
-import io.agora.livestreaming.tools.FastClickTools
-import io.agora.livestreaming.tools.LogTools
-import io.agora.livestreaming.tools.StatusBarCompat
-import io.agora.livestreaming.tools.ThreadTools
+import io.agora.livestreaming.tools.*
 import io.agora.mediaplayer.IMediaPlayer
 import io.agora.rtc2.*
 import io.agora.rtc2.video.VideoCanvas
@@ -42,11 +40,12 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
         }
     }
 
-    private var curEnlarge = -1
+    private var curEnlarge: Int = -1 // 当前放大的画面
+    private var curBroadcastUid: Int = -1 // 主播uid,只展示最新上线的
     private val applyConstraintSet = ConstraintSet()
-    private var livingMute = true
-    private var hlsMute = true
-    private var flvMute = true
+    private var livingMute = true // 直播默认静音
+    private var hlsMute = true // hls 拉流默认静音
+    private var flvMute = true // flv 拉流默认静音
     private var rtcEngine: RtcEngineEx? = null
     private var mediaPlayerHls: IMediaPlayer? = null
     private var mediaPlayerFlv: IMediaPlayer? = null
@@ -205,24 +204,29 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
 
             override fun onError(err: Int) {
                 super.onError(err)
-                LogTools.e("onError:$err")
+                LogTools.e("onError err:$err")
             }
 
             override fun onJoinChannelSuccess(channel: String?, uid: Int, elapsed: Int) {
                 super.onJoinChannelSuccess(channel, uid, elapsed)
-                LogTools.d("onJoinChannelSuccess:channel-$channel,uid-$uid")
+                LogTools.d("onJoinChannelSuccess channel：$channel,uid:$uid")
             }
 
             override fun onRemoteAudioStateChanged(uid: Int, state: Int, reason: Int, elapsed: Int) {
                 super.onRemoteAudioStateChanged(uid, state, reason, elapsed)
-                LogTools.d("onRemoteAudioStateChanged:uid-$uid,state-$state,reason-$reason")
-
+                LogTools.d("onRemoteAudioStateChanged uid:$uid,state:$state,reason:$reason")
             }
 
             override fun onUserJoined(uid: Int, elapsed: Int) {
                 super.onUserJoined(uid, elapsed)
-                LogTools.d("onUserJoined:uid-$uid")
+                LogTools.d("onUserJoined uid:$uid")
                 setUpRtcVideo(uid)
+            }
+
+            override fun onUserOffline(uid: Int, reason: Int) {
+                super.onUserOffline(uid, reason)
+                LogTools.d("onUserOffline uid:$uid")
+                removeRtcVideo(uid)
             }
 
             // 显示成延迟，因为视频的延迟废弃了
@@ -263,6 +267,7 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
         loadVideo()
     }
 
+    // 加载主播画面
     private fun setUpRtcVideo(uid: Int) {
         ThreadTools.get().runOnMainThread {
             if (binding.containerLiving.childCount > 0) binding.containerLiving.removeAllViews()
@@ -274,6 +279,24 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
                 )
             )
             rtcEngine?.setupRemoteVideo(VideoCanvas(textureView, VideoCanvas.RENDER_MODE_HIDDEN, uid))
+            curBroadcastUid = uid
+            ToastTools.toastLong(this, "主播($uid)已上线")
+        }
+    }
+
+    // 移除主播画面
+    private fun removeRtcVideo(uid: Int) {
+        ThreadTools.get().runOnMainThread {
+            if (curBroadcastUid == uid) {
+                if (binding.containerLiving.childCount > 0) {
+                    binding.containerLiving.removeAllViews()
+                    curBroadcastUid = -1
+                    binding.tvLatency.text = "延时"
+                    binding.tvRatio.text = "分辨率"
+                    binding.tvRate.text = "码率"
+                    ToastTools.toastLong(this, "主播($uid)已下线")
+                }
+            }
         }
     }
 
@@ -300,17 +323,24 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
         mediaPlayerHls?.mute(true)
         mediaPlayerHls?.registerPlayerObserver(object : MediaPlayerObserver() {
 
-
             override fun onPlayerStateChanged(
                 state: io.agora.mediaplayer.Constants.MediaPlayerState?,
                 error: io.agora.mediaplayer.Constants.MediaPlayerError?
             ) {
                 super.onPlayerStateChanged(state, error)
                 LogTools.d("IMediaPlayer HLS onPlayerStateChanged ,$state $error")
-                // 资源准备完成，可以播放
-                if (state == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
-                    LogTools.d("IMediaPlayer HLS OPEN_COMPLETED,play...")
-                    mediaPlayerHls?.play()
+                when (state) {
+                    io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED -> {
+                        // 资源准备完成，可以播放
+                        mediaPlayerHls?.play()
+                    }
+                    io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_FAILED -> {
+                        // 播放失败
+                        ThreadTools.get().runOnMainThread {
+                            ToastTools.toastLong(this@LivingActivity,"HLS 拉流播放失败")
+                        }
+                    }
+                    else -> {}
                 }
             }
         })
@@ -335,10 +365,18 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
             ) {
                 super.onPlayerStateChanged(state, error)
                 LogTools.d("IMediaPlayer FLV onPlayerStateChanged ,$state $error")
-                // 资源准备完成，可以播放
-                if (state == io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED) {
-                    LogTools.d("IMediaPlayer FLV OPEN_COMPLETED,play...")
-                    mediaPlayerFlv?.play()
+                when (state) {
+                    io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_OPEN_COMPLETED -> {
+                        // 资源准备完成，可以播放
+                        mediaPlayerFlv?.play()
+                    }
+                    io.agora.mediaplayer.Constants.MediaPlayerState.PLAYER_STATE_FAILED -> {
+                        // 播放失败
+                        ThreadTools.get().runOnMainThread {
+                            ToastTools.toastLong(this@LivingActivity,"FLV 拉流播放失败")
+                        }
+                    }
+                    else -> {}
                 }
             }
         })

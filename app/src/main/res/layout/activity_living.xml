@@ -97,6 +97,7 @@
         android:id="@+id/iv_mute_living"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_text_black30"
         android:padding="8dp"
         android:src="@drawable/audio_mute"
         app:layout_constraintBottom_toBottomOf="@id/container_living"
@@ -140,7 +141,6 @@
         app:layout_constraintBottom_toBottomOf="@id/container_living"
         app:layout_constraintEnd_toStartOf="@id/tv_rate" />
 
-
     <FrameLayout
         android:id="@+id/container_hls"
         android:layout_width="0dp"
@@ -167,6 +167,7 @@
         android:id="@+id/iv_mute_hls"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_text_black30"
         android:padding="8dp"
         android:src="@drawable/audio_mute"
         app:layout_constraintBottom_toBottomOf="@id/container_hls"
@@ -198,6 +199,7 @@
         android:id="@+id/iv_mute_flv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_text_black30"
         android:padding="8dp"
         android:src="@drawable/audio_mute"
         app:layout_constraintBottom_toBottomOf="@id/container_flv"
