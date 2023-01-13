@@ -9,7 +9,6 @@ import android.view.TextureView
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.core.view.isVisible
 import androidx.transition.TransitionManager
 import io.agora.livestreaming.base.BaseUiActivity
 import io.agora.livestreaming.base.CommonFragmentAlertDialog
@@ -119,6 +118,9 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
             mediaPlayerFlv?.mute(!flvMute)
             flvMute = !flvMute
         }
+        binding.ivBack.setOnClickListener {
+            onBackPressed()
+        }
     }
 
     private fun enlargeLiving() {
@@ -128,18 +130,18 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
 
         // 极速直播放大
         applyConstraintSet.connect(R.id.container_living, ConstraintSet.TOP, parentId, ConstraintSet.TOP)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.START, R.id.vertical10, ConstraintSet.END)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.END, R.id.vertical90, ConstraintSet.START)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.BOTTOM, R.id.horizontal80, ConstraintSet.TOP)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.START, R.id.vertical17, ConstraintSet.END)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.END, R.id.vertical83, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.BOTTOM, R.id.horizontal66, ConstraintSet.TOP)
 
         // 其他的缩小
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.TOP, R.id.horizontal80, ConstraintSet.BOTTOM)
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.START, R.id.vertical60, ConstraintSet.END)
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.END, R.id.vertical80, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.TOP, R.id.horizontal66, ConstraintSet.BOTTOM)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.START, R.id.vertical34, ConstraintSet.END)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.END, R.id.vertical67, ConstraintSet.START)
         applyConstraintSet.connect(R.id.container_hls, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM)
 
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.TOP, R.id.horizontal80, ConstraintSet.BOTTOM)
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.START, R.id.vertical80, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.TOP, R.id.horizontal66, ConstraintSet.BOTTOM)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.START, R.id.vertical67, ConstraintSet.START)
         applyConstraintSet.connect(R.id.container_flv, ConstraintSet.END, parentId, ConstraintSet.END)
         applyConstraintSet.connect(R.id.container_flv, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM)
 
@@ -149,18 +151,18 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
     private fun enlargeHls() {
         val parentId = ConstraintLayout.LayoutParams.PARENT_ID
         applyConstraintSet.connect(R.id.container_hls, ConstraintSet.TOP, parentId, ConstraintSet.TOP)
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.START, R.id.vertical10, ConstraintSet.END)
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.END, R.id.vertical90, ConstraintSet.START)
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.BOTTOM, R.id.horizontal80, ConstraintSet.TOP)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.START, R.id.vertical17, ConstraintSet.END)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.END, R.id.vertical83, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.BOTTOM, R.id.horizontal66, ConstraintSet.TOP)
 
         // 其他的缩小
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.TOP, R.id.horizontal80, ConstraintSet.BOTTOM)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.START, R.id.vertical60, ConstraintSet.END)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.END, R.id.vertical80, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.TOP, R.id.horizontal66, ConstraintSet.BOTTOM)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.START, R.id.vertical34, ConstraintSet.END)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.END, R.id.vertical67, ConstraintSet.START)
         applyConstraintSet.connect(R.id.container_living, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM)
 
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.TOP, R.id.horizontal80, ConstraintSet.BOTTOM)
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.START, R.id.vertical80, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.TOP, R.id.horizontal66, ConstraintSet.BOTTOM)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.START, R.id.vertical67, ConstraintSet.START)
         applyConstraintSet.connect(R.id.container_flv, ConstraintSet.END, parentId, ConstraintSet.END)
         applyConstraintSet.connect(R.id.container_flv, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM)
 
@@ -170,17 +172,17 @@ class LivingActivity : BaseUiActivity<ActivityLivingBinding>() {
     private fun enlargeFlv() {
         val parentId = ConstraintLayout.LayoutParams.PARENT_ID
         applyConstraintSet.connect(R.id.container_flv, ConstraintSet.TOP, parentId, ConstraintSet.TOP)
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.START, R.id.vertical10, ConstraintSet.END)
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.END, R.id.vertical90, ConstraintSet.START)
-        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.BOTTOM, R.id.horizontal80, ConstraintSet.TOP)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.START, R.id.vertical17, ConstraintSet.END)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.END, R.id.vertical83, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_flv, ConstraintSet.BOTTOM, R.id.horizontal66, ConstraintSet.TOP)
 
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.TOP, R.id.horizontal80, ConstraintSet.BOTTOM)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.START, R.id.vertical60, ConstraintSet.END)
-        applyConstraintSet.connect(R.id.container_living, ConstraintSet.END, R.id.vertical80, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.TOP, R.id.horizontal66, ConstraintSet.BOTTOM)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.START, R.id.vertical34, ConstraintSet.END)
+        applyConstraintSet.connect(R.id.container_living, ConstraintSet.END, R.id.vertical67, ConstraintSet.START)
         applyConstraintSet.connect(R.id.container_living, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM)
 
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.TOP, R.id.horizontal80, ConstraintSet.BOTTOM)
-        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.START, R.id.vertical80, ConstraintSet.START)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.TOP, R.id.horizontal66, ConstraintSet.BOTTOM)
+        applyConstraintSet.connect(R.id.container_hls, ConstraintSet.START, R.id.vertical67, ConstraintSet.START)
         applyConstraintSet.connect(R.id.container_hls, ConstraintSet.END, parentId, ConstraintSet.END)
         applyConstraintSet.connect(R.id.container_hls, ConstraintSet.BOTTOM, parentId, ConstraintSet.BOTTOM)
 
